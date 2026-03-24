@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aegis Admin</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+        body { font-family: 'Montserrat', sans-serif; background: #000; color: #fff; margin: 0; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; }
+        nav { background: #111; padding: 15px 0; display: flex; justify-content: center; align-items: center; gap: 10px; border-bottom: 2px solid #333; z-index: 100; }
+        .logo { font-weight: 900; font-size: 24px; color: #03dac6; border: 3px solid #03dac6; padding: 5px 10px; text-transform: uppercase; margin-right: 15px; }
+        nav button { background: transparent; border: 2px solid #bb86fc; color: #bb86fc; padding: 8px 15px; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 14px; text-transform: uppercase; transition: 0.3s; }
+        nav button:hover { background: #bb86fc; color: #000; box-shadow: 0 0 15px #bb86fc; }
+        .container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; overflow: hidden; }
+        .page { display: none; flex-direction: column; width: 100%; max-width: 900px; height: 85vh; }
+        .card { background: #111; padding: 25px; border-radius: 20px; border: 1px solid #333; overflow-y: auto; margin-bottom: 20px; }
+        .action-btn { background: #03dac6; color: #000; font-weight: bold; border: none; cursor: pointer; padding: 12px; border-radius: 8px; font-size: 16px; width: 100%; margin-bottom: 15px; }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
+        
+        /* Table & Lists */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background: #03dac6; color: #000; text-align: left; padding: 10px; font-size: 14px; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #222; font-size: 16px; }
+        .day-row { background: #222; color: #bb86fc; font-weight: 900; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+        .item { padding: 15px; border-bottom: 1px solid #333; background: #1a1a1a; margin-bottom: 10px; border-radius: 10px; }
+        .sender { color: #03dac6; font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+        
+        /* Welcome Text */
+        .welcome-content { text-align: center; max-width: 600px; margin: 0 auto; }
+        .welcome-content h1 { font-size: 48px; color: #03dac6; margin-bottom: 20px; letter-spacing: 5px; }
+        .welcome-content p { font-size: 18px; line-height: 1.6; color: #aaa; }
+        .welcome-content span { color: #bb86fc; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">AEGIS</div>
+        <button onclick="showPage('welcome-page')">Home</button>
+        <button onclick="showPage('email-page')">Emails</button>
+        <button onclick="showPage('notes-page')">Notes</button>
+        <button onclick="showPage('calendar-page')">Calendar</button>
+        <button onclick="showPage('timetable-page')">Timetable</button>
+    </nav>
+
+    <div class="container">
+        <div id="welcome-page" class="page" style="display: flex;">
+            <div class="welcome-content">
+                <h1>AEGIS</h1>
+                <p>Advanced Integrated System Active. <br> Monitoring all modules and system vitals.</p>
+                <div id="stats" style="margin-top: 30px; font-weight: bold; color: #03dac6;">[ Loading System Data ]</div>
+            </div>
+        </div>
+
+        <div id="email-page" class="page">
+            <h1 style="color: #bb86fc;">Important Emails</h1>
+            <div class="card">
+                <button class="action-btn" onclick="syncEmails()">Sync Gmail</button>
+                <div id="email-list"></div>
+            </div>
+        </div>
+
+        <div id="notes-page" class="page">
+            <h1 style="color: #bb86fc;">Notes & Documents</h1>
+            <div class="card">
+                <form id="note-form">
+                    <input type="text" name="title" placeholder="Note Title" required>
+                    <textarea name="content" placeholder="Type your notes here..." rows="4"></textarea>
+                    <input type="file" name="file">
+                    <button type="submit" class="action-btn">Save to Cloud</button>
+                </form>
+                <div id="notes-list" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <div id="calendar-page" class="page">
+            <h1 style="color: #bb86fc;">Events & Reminders</h1>
+            <div class="card">
+                <form id="rem-form">
+                    <input type="text" name="title" placeholder="Event Name" required>
+                    <input type="date" name="remind_date" required>
+                    <select name="category"><option disabled selected hidden>--Select--</option><option>Deadline</option><option>Birthday</option><option>Exam</option><option>Assignment</option><option>Quiz</option><option>Lab Assessment</option><option>--Select--</option></select>
+                    <button type="submit" class="action-btn">Schedule Event</button>
+                </form>
+                <div id="rem-list" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <div id="timetable-page" class="page">
+            <h1 style="color: #bb86fc;">University Timetable</h1>
+            <div class="card">
+                <button class="action-btn" onclick="syncTimetable()">Refresh from Excel</button>
+                <div id="timetable-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById(id).style.display = 'flex';
+            if(id === 'welcome-page') loadStats();
+            if(id === 'email-page') loadEmails();
+            if(id === 'notes-page') loadNotes();
+            if(id === 'calendar-page') loadReminders();
+            if(id === 'timetable-page') loadTimetable();
+        }
+
+        async function loadStats() {
+            const res = await fetch('/system-status');
+            const d = await res.json();
+            document.getElementById('stats').innerText = `DISK: ${d.disk_free} FREE | RAM: ${d.ram_percent}% | BATTERY: ${d.battery_percent}%`;
+        }
+
+        async function syncEmails() { 
+            document.getElementById('email-list').innerHTML = "Syncing Gmail...";
+            await fetch('/sync'); loadEmails(); 
+        }
+        async function loadEmails() {
+            const res = await fetch('/emails'); const d = await res.json();
+            document.getElementById('email-list').innerHTML = d.map(e => `<div class="item"><div class="sender">${e.sender}</div>${e.subject}</div>`).join('');
+        }
+
+        document.getElementById('note-form').onsubmit = async (e) => {
+            e.preventDefault(); await fetch('/add-note', {method:'POST', body:new FormData(e.target)}); e.target.reset(); loadNotes();
+        };
+        async function loadNotes() {
+            const res = await fetch('/notes'); const d = await res.json();
+            document.getElementById('notes-list').innerHTML = d.map(n => `<div class="item"><b>${n.title}</b><p>${n.content}</p></div>`).join('');
+        }
+
+        document.getElementById('rem-form').onsubmit = async (e) => {
+            e.preventDefault(); await fetch('/add-reminder', {method:'POST', body:new FormData(e.target)}); e.target.reset(); loadReminders();
+        };
+        async function loadReminders() {
+            const res = await fetch('/reminders'); const d = await res.json();
+            document.getElementById('rem-list').innerHTML = d.map(r => `<div class="item"><b>${r.remind_date}</b> - ${r.title}</div>`).join('');
+        }
+
+        async function syncTimetable() { 
+            document.getElementById('timetable-list').innerHTML = "Syncing Excel...";
+            await fetch('/sync-timetable'); loadTimetable(); 
+        }
+        async function loadTimetable() {
+            const res = await fetch('/timetable'); const data = await res.json();
+            let html = "<table><thead><tr><th>Time</th><th>Subject</th><th>Room</th></tr></thead><tbody>";
+            let currentDay = "";
+            data.forEach(row => {
+                if(row.day_of_week !== currentDay) {
+                    currentDay = row.day_of_week;
+                    html += `<tr class="day-row"><td colspan="3">${currentDay}</td></tr>`;
+                }
+                html += `<tr><td style="color:#bb86fc; font-weight:bold;">${row.start_time}-${row.end_time}</td><td>${row.subject_name}</td><td>${row.room_number}</td></tr>`;
+            });
+            document.getElementById('timetable-list').innerHTML = html + "</tbody></table>";
+        }
+
+        window.onload = loadStats;
+    </script>
+</body>
+</html>
