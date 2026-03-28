@@ -3,6 +3,28 @@
 **PURPOSE**: Unified College Administrative Dashboard
 **CORE STACK**: Python (FastAPI), MySQL, JavaScript (ES6), CSS3, Pandas
 
+# 🛡️ AEGIS — Unified Student Dashboard
+
+## 🔍 Why this project exists
+Students constantly switch between multiple tools — email, timetable, notes, and reminders — leading to inefficiency and missed information. AEGIS was built to unify all essential academic workflows into a single, integrated system.
+
+## 🚀 What it does
+AEGIS is a centralized dashboard that:
+- Syncs emails
+- Displays timetable from structured data
+- Stores notes and attachments
+- Manages reminders
+
+All within a single interface.
+
+## 🧠 Key Idea
+Instead of building separate tools, AEGIS integrates multiple student utilities into one backend-driven system using structured data and automation.
+
+## ✨ What makes it different
+- Combines **email + timetable + notes + reminders**
+- Uses **structured Excel ingestion for schedules**
+- Backend-driven architecture (not just frontend UI)
+
 1. **DIRECTORY STRUCTURE**
 Aegis/
 ├── main.py              (Backend API & Server Logic)
