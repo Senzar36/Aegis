@@ -1,8 +1,3 @@
-**AEGIS: PROJECT OVERVIEW**
-**PROJECT NAME**: AEGIS (Advanced Integrated System)
-**PURPOSE**: Unified College Administrative Dashboard
-**CORE STACK**: Python (FastAPI), MySQL, JavaScript (ES6), CSS3, Pandas
-
 # 🛡️ AEGIS — Unified Student Dashboard
 
 ## 🔍 Why this project exists
