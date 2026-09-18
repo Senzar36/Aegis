@@ -68,5 +68,4 @@ Run: python main.py
 Open your browser to: http://localhost:8000
 
 6. **IMPORTANT THINGS FOR THE PROGRAM TO WORK**
-This program is in very basic form and can be used for personal use.
-In order to run the program, make sure the files are in the same order as the structure provided.
+AEGIS is currently designed for personal use and provides a foundation for integrating essential student utilities into a unified dashboard.
